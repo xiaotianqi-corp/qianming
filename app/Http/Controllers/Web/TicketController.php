@@ -29,7 +29,7 @@ class TicketController extends Controller
     public function create(): Response
     {
         $certificateRequests = CertificateRequest::whereHas('orderItem.order', function ($q) {
-            $q->where('customer_id', auth()->id());
+            $q->where('order_id', auth()->id());
         })->with('orderItem.product')->get();
 
         return Inertia::render('support/tickets/create', [
