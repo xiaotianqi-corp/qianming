@@ -61,16 +61,26 @@ class SupportTicketController extends Controller
     
     public function update(Request $request, SupportTicket $supportTicket): JsonResponse
     {
-        $this->authorize('update-ticket', $supportTicket);
+        if (!auth()->user()->hasRole('admin', 'support')) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
 
         $validated = $request->validate([
-            'status' => 'sometimes|string',
-            'priority' => 'sometimes|string',
+            'status' => 'required|string|in:open,pending,resolved,closed',
+            'priority' => 'sometimes|string|in:low,medium,high',
             'provider_payload' => 'sometimes|array'
         ]);
 
         $supportTicket->update($validated);
 
-        return response()->json($supportTicket);
+        AuditEvent::log('ticket_updated_by_staff', [
+            'ticket_id' => $supportTicket->id,
+            'new_status' => $supportTicket->status
+        ]);
+
+        return response()->json([
+            'message' => 'Ticket updated successfully',
+            'data' => $supportTicket
+        ]);
     }
 }

@@ -10,7 +10,7 @@ class IdentityToUanatacaMapper {
     public static function map(Identity $identity, Order $order): CertificateRequestDTO {
         return new CertificateRequestDTO(
             externalId: "ORD-{$order->id}",
-            commonName: "{$identity->first_name} {$identity->last_name}",
+            commonName: "{$identity->first_name} . ' ' . {$identity->last_name}",
             email: $identity->email,
             documentNumber: $identity->document_number,
             countryCode: $identity->country->code,

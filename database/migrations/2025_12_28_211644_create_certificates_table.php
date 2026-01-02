@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamp('issued_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->json('payload')->nullable();
-            $table->timestamp('revoked_at')->nullable()->after('expires_at');
+            $table->timestamp('revoked_at')->nullable();
             $table->foreignId('renewed_from_id')
                 ->nullable()
                 ->constrained('certificates');

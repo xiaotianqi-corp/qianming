@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /*
 |--------------------------------------------------------------------------
-| Webhooks (Externos) - Paso 7.9
+| Webhooks (Externos)
 |--------------------------------------------------------------------------
 */
 Route::post('/webhooks/uanataca', [WebhookController::class, 'uanataca'])
@@ -33,7 +33,7 @@ Route::post('/webhooks/uanataca', [WebhookController::class, 'uanataca'])
 
 /*
 |--------------------------------------------------------------------------
-| Módulo de Soporte (Paso 6) - UX Cliente
+| Módulo de Soporte
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:sanctum')
@@ -47,15 +47,13 @@ Route::middleware('auth:sanctum')
 
 /*
 |--------------------------------------------------------------------------
-| Módulo de Cumplimiento e Interno (Paso 6.6, 7.5, 7.6)
+| Módulo de Cumplimiento e Interno
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:sanctum', 'role:compliance,support,admin'])
     ->prefix('internal')
     ->name('internal.')
     ->group(function () {
-
-        // --- Gestión de Cumplimiento (Compliance) ---
         Route::prefix('compliance')->name('compliance.')->group(function () {
             Route::get('/identities', [SecureIdentityController::class, 'index'])->name('identities.index');
             Route::get('/identities/{identity}', [SecureIdentityController::class, 'show'])->name('identities.show');
@@ -68,16 +66,19 @@ Route::middleware(['auth:sanctum', 'role:compliance,support,admin'])
             })->name('audit.logs');
         });
 
-        // --- Operaciones de Soporte Interno (Soporte L1/L2) ---
         Route::prefix('support')->name('support.')->group(function () {
-            Route::get('/tickets', [SupportTicketController::class, 'index'])->name('index'); // Lista global para staff
-            Route::patch('/tickets/{supportTicket}', [SupportTicketController::class, 'update'])->name('update');
+            Route::prefix('tickets')->name('tickets.')->group(function () {
+                Route::get('/', [SupportTicketController::class, 'index'])->name('index');
+                Route::post('/', [SupportTicketController::class, 'store'])->name('store');
+                Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('show');
+                Route::patch('/{supportTicket}', [SupportTicketController::class, 'update'])->name('update');
+            });
         });
     });
 
 /*
 |--------------------------------------------------------------------------
-| API V1 - Rutas Públicas con Rate Limiting (Paso 7.7)
+| API V1 - Rutas Públicas con Rate Limiting
 |--------------------------------------------------------------------------
 */
 Route::prefix('public')->middleware('throttle:60,1')->group(function () {
