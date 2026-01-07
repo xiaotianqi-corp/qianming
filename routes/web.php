@@ -20,7 +20,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('tickets')->name('tickets.')->group(function () {
             Route::get('/', [TicketController::class, 'index'])->name('index');
             Route::get('/create', [TicketController::class, 'create'])->name('create');
-            Route::get('/{supportTicket}', [TicketController::class, 'show'])->name('show');
+            Route::post('/', [TicketController::class, 'store'])->name('store');
+            Route::get('{supportTicket}', [TicketController::class, 'show'])->name('show');
+            Route::put('{supportTicket}', [TicketController::class, 'update'])->name('update');
         });
     });
 });

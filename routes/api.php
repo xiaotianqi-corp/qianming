@@ -33,20 +33,6 @@ Route::post('/webhooks/uanataca', [WebhookController::class, 'uanataca'])
 
 /*
 |--------------------------------------------------------------------------
-| Módulo de Soporte
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth:sanctum')
-    ->prefix('support')
-    ->name('support.')
-    ->group(function () {
-        Route::get('/tickets', [SupportTicketController::class, 'index'])->name('index');
-        Route::post('/tickets', [SupportTicketController::class, 'store'])->name('store');
-        Route::get('/tickets/{supportTicket}', [SupportTicketController::class, 'show'])->name('show');
-    });
-
-/*
-|--------------------------------------------------------------------------
 | Módulo de Cumplimiento e Interno
 |--------------------------------------------------------------------------
 */

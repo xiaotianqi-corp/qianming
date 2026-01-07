@@ -1,191 +1,280 @@
-import { Head } from '@inertiajs/react'
-import { FormEventHandler, useEffect, useState } from 'react'
-import axios from 'axios'
-import { router } from '@inertiajs/react'
+import { Button } from '@/components/ui/button';
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import support from '@/routes/support';
+import { BreadcrumbItem } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { Check, Copy } from 'lucide-react';
+import { useState } from 'react';
 
 interface CertificateRequest {
-  id: number
-  external_id: string
+  id: number;
+  external_id: string;
 }
 
-export default function Create() {
-  const [certificateRequests, setCertificateRequests] = useState<CertificateRequest[]>([])
-  const [loading, setLoading] = useState(true)
-  const [processing, setProcessing] = useState(false)
-  
-  const [formData, setFormData] = useState({
-    category: '',
-    priority: 'medium',
+interface Props {
+  certificateRequests: CertificateRequest[];
+}
+
+const breadcrumbs: BreadcrumbItem[] = [
+  { title: 'Tickets', href: support.tickets.index().url },
+  { title: 'Create ticket', href: support.tickets.create().url },
+];
+
+const generatePreviewTicketNumber = () => {
+  const now = new Date();
+  const yy = now.getFullYear().toString().slice(-2);
+  const mm = (now.getMonth() + 1).toString().padStart(2, '0');
+  const dd = now.getDate().toString().padStart(2, '0');
+  const datePart = `${yy}${mm}${dd}`;
+  const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+
+  return `TKT-${datePart}-${randomPart}`;
+};
+
+export default function Create({ certificateRequests }: Props) {
+  const [copied, setCopied] = useState(false);
+  const [previewNumber] = useState(generatePreviewTicketNumber());
+  const { data, setData, post, processing, errors } = useForm({
+    ticket_number: previewNumber,
+    requester: '',
+    subject: '',
+    source: '',
+    status: '',
+    urgency: '',
+    impact: '',
+    priority: '',
+    group: '',
+    agent: '',
     description: '',
+    category: '',
     certificate_request_id: '',
-  })
-  
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  });
 
-  const categories = ['identity', 'payment', 'issuance', 'technical']
-  const priorities = ['low', 'medium', 'high']
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(data.ticket_number);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  useEffect(() => {
-    // Fetch certificate requests from backend
-    axios.get('/api/public/orders')
-      .then(response => {
-        // Extract certificate requests from orders
-        const certs: CertificateRequest[] = []
-        response.data.forEach((order: any) => {
-          order.items?.forEach((item: any) => {
-            if (item.certificate_request) {
-              certs.push(item.certificate_request)
-            }
-          })
-        })
-        setCertificateRequests(certs)
-        setLoading(false)
-      })
-      .catch(error => {
-        console.error('Error fetching certificate requests:', error)
-        setLoading(false)
-      })
-  }, [])
-
-  const submit: FormEventHandler = (e) => {
-    e.preventDefault()
-    setProcessing(true)
-    setErrors({})
-
-    axios.post('/api/support/tickets', formData)
-      .then(() => {
-        router.visit('/support/tickets')
-      })
-      .catch(error => {
-        if (error.response?.data?.errors) {
-          setErrors(error.response.data.errors)
-        }
-        setProcessing(false)
-      })
-  }
-
-  if (loading) {
-    return (
-      <>
-        <Head title="Create Support Ticket" />
-        <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-          <p className="text-gray-500">Loading...</p>
-        </div>
-      </>
-    )
-  }
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    post(support.tickets.store().url);
+  };
 
   return (
-    <>
+    <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Create Support Ticket" />
+      <div className="flex h-dvh flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+        <div className="px-4 py-4">
+          <form onSubmit={submit} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm">
+            <FieldGroup>
+                <FieldGroup>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <FieldLegend className="text-2xl">New Support Request</FieldLegend>
+                      <FieldDescription>Fill out the form below to open a new case.</FieldDescription>
+                    </div>
 
-      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-        <h1 className="mb-6 text-3xl font-bold">Create Support Ticket</h1>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Case Identifier</span>
+                      <div className="flex items-center gap-1 bg-gray-50 border rounded-md p-1 pl-3">
+                        <code className="text-sm font-mono font-bold text-blue-600">
+                          {data.ticket_number}
+                        </code>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-gray-400 hover:text-blue-600"
+                          onClick={copyToClipboard}
+                        >
+                          {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Field>
+                      <FieldLabel>Requester</FieldLabel>
+                      <Input
+                        placeholder="Search"
+                        value={data.requester}
+                        onChange={(e) => setData('requester', e.target.value)}
+                        required
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel>Subject</FieldLabel>
+                      <Input
+                        placeholder="Brief summary of the issue"
+                        value={data.subject}
+                        onChange={(e) => setData('subject', e.target.value)}
+                        required
+                      />
+                    </Field>
+                  </div>
+                  <FieldSeparator />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Field>
+                      <FieldLabel>Source</FieldLabel>
+                      <Select defaultValue="phone" value={data.source} onValueChange={(v) => setData('source', v)}>
+                        <SelectTrigger><SelectValue placeholder="Source" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="phone">Phone</SelectItem>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="portal">Portal</SelectItem>
+                          <SelectItem value="chat">Chat</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel>Status *</FieldLabel>
+                      <Select defaultValue="open" value={data.status} onValueChange={(v) => setData('status', v)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="open">Open</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="resolved">Resolved</SelectItem>
+                          <SelectItem value="closed">Closed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <Field>
+                      <FieldLabel>Urgency</FieldLabel>
+                      <Select defaultValue="low" value={data.urgency} onValueChange={(v) => setData('urgency', v)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Urgency" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel>Impact</FieldLabel>
+                      <Select defaultValue="low" value={data.impact} onValueChange={(v) => setData('impact', v)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Impact" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="priority">Priority *</FieldLabel>
+                      <Select defaultValue="low" value={data.priority} onValueChange={(v) => setData('priority', v)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Priority" id="priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="urgent">Urgent</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  </div>
+                </FieldGroup>
 
-        <form onSubmit={submit} className="space-y-6 rounded-lg bg-white p-6 shadow">
-          {/* Category */}
-          <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-              Category
-            </label>
-            <select
-              id="category"
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            >
-              <option value="">Select a category</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
-          </div>
+              <FieldSeparator />
 
-          {/* Priority */}
-          <div>
-            <label htmlFor="priority" className="block text-sm font-medium text-gray-700">
-              Priority
-            </label>
-            <select
-              id="priority"
-              value={formData.priority}
-              onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            >
-              {priorities.map((pri) => (
-                <option key={pri} value={pri}>
-                  {pri}
-                </option>
-              ))}
-            </select>
-            {errors.priority && <p className="mt-1 text-sm text-red-600">{errors.priority}</p>}
-          </div>
+              <FieldSet>
+                <div className="grid grid-cols-3 gap-4">
+                  <Field>
+                    <FieldLabel >Group</FieldLabel>
+                    <Select defaultValue=" " value={data.group} onValueChange={(v) => setData('group', v)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value=" ">--</SelectItem>
+                        <SelectItem value="applications">Applications Management Team</SelectItem>
+                        <SelectItem value="equipments">Equipments Management Team</SelectItem>
+                        <SelectItem value="request">Request Management Team</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel>Related Certificate (Optional)</FieldLabel>
+                    <Select
+                      value={data.certificate_request_id}
+                      onValueChange={(v) => setData('certificate_request_id', v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a certificate" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {certificateRequests.map((cert) => (
+                          <SelectItem key={cert.id} value={cert.id.toString()}>
+                            Cert #{cert.id} - {cert.external_id}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="category">Category *</FieldLabel>
+                    <Select defaultValue="identity" value={data.category} onValueChange={(v) => setData('category', v)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" id="category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="identity">Identity</SelectItem>
+                        <SelectItem value="payment">Payment</SelectItem>
+                        <SelectItem value="issuance">Issuance</SelectItem>
+                        <SelectItem value="technical">Technical</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}
+                  </Field>
+                </div>
+              </FieldSet>
 
-          {/* Certificate Request (optional) */}
-          <div>
-            <label
-              htmlFor="certificate_request_id"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Related Certificate (Optional)
-            </label>
-            <select
-              id="certificate_request_id"
-              value={formData.certificate_request_id}
-              onChange={(e) => setFormData({ ...formData, certificate_request_id: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            >
-              <option value="">None</option>
-              {certificateRequests.map((cert) => (
-                <option key={cert.id} value={cert.id}>
-                  Certificate #{cert.id} - {cert.external_id}
-                </option>
-              ))}
-            </select>
-            {errors.certificate_request_id && (
-              <p className="mt-1 text-sm text-red-600">{errors.certificate_request_id}</p>
-            )}
-          </div>
+              <FieldSeparator />
 
-          {/* Description */}
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Description
-            </label>
-            <textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={5}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Describe your issue..."
-            />
-            {errors.description && (
-              <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-            )}
-          </div>
-
-          {/* Buttons */}
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={processing}
-              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-            >
-              {processing ? 'Creating...' : 'Create Ticket'}
-            </button>
-            <a
-              href="/support/tickets"
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </a>
-          </div>
-        </form>
+              <FieldSet>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor="description">Description *</FieldLabel>
+                    <Textarea
+                      id="description"
+                      placeholder="Add description"
+                      className="resize-none"
+                      value={data.description}
+                      onChange={(e) => setData('description', e.target.value)}
+                      required
+                    />
+                    {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
+                  </Field>
+                </FieldGroup>
+              </FieldSet>
+              <Field orientation="horizontal" className="flex gap-3">
+                <Button type="submit" disabled={processing}>
+                  {processing ? 'Creating...' : 'Create Ticket'}
+                </Button>
+                <Button variant="outline" type="button" asChild>
+                  <Link href={support.tickets.index().url}>Cancel</Link>
+                </Button>
+              </Field>
+            </FieldGroup>
+          </form>
+        </div>
       </div>
-    </>
-  )
+    </AppLayout>
+  );
 }

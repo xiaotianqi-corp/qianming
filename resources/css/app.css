@@ -8,49 +8,55 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
-
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
-
+    
+    /* Colores base */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
-
     --color-popover: var(--popover);
     --color-popover-foreground: var(--popover-foreground);
-
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
-
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
-
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
-
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
-
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
-
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
-
+    
+    /* Charts */
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
-
+    --color-chart-6: var(--chart-6);
+    --color-chart-7: var(--chart-7);
+    --color-chart-8: var(--chart-8);
+    --color-chart-9: var(--chart-9);
+    --color-chart-10: var(--chart-10);
+    --color-chart-11: var(--chart-11);
+    --color-chart-12: var(--chart-12);
+    --color-chart-13: var(--chart-13);
+    --color-chart-14: var(--chart-14);
+    --color-chart-15: var(--chart-15);
+    --color-chart-16: var(--chart-16);
+    --color-chart-17: var(--chart-17);
+    --color-chart-18: var(--chart-18);
+    --color-chart-19: var(--chart-19);
+    --color-chart-20: var(--chart-20);
+    
+    /* Sidebar */
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);
@@ -59,78 +65,577 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
-}
-
-:root {
+    
+    /* Text colors */
+    --color-text-brand: var(--text-brand);
+    --color-text-primary: var(--text-primary);
+    --color-text-secondary: var(--text-secondary);
+    --color-text-disabled: var(--text-disabled);
+    --color-text-placeholder: var(--text-placeholder);
+    --color-text-inverse: var(--text-inverse);
+    --color-text-semantic-success: var(--text-semantic-success);
+    --color-text-semantic-warning: var(--text-semantic-warning);
+    --color-text-semantic-error: var(--text-semantic-error);
+    --color-text-semantic-info: var(--text-semantic-info);
+    --color-text-semantic-highlight: var(--text-semantic-highlight);
+    
+    /* Icon colors */
+    --color-icon-primary: var(--icon-primary);
+    --color-icon-secondary: var(--icon-secondary);
+    --color-icon-selected: var(--icon-selected);
+    --color-icon-disabled: var(--icon-disabled);
+    --color-icon-inverse: var(--icon-inverse);
+    --color-icon-semantic-success: var(--icon-semantic-success);
+    --color-icon-semantic-warning: var(--icon-semantic-warning);
+    --color-icon-semantic-error: var(--icon-semantic-error);
+    --color-icon-semantic-info: var(--icon-semantic-info);
+    --color-icon-semantic-highlight: var(--icon-semantic-highlight);
+    
+    /* Fill colors */
+    --color-fill-surface: var(--fill-surface);
+    --color-fill-container: var(--fill-container);
+    --color-fill-base: var(--fill-base);
+    --color-fill-base-bold: var(--fill-base-bold);
+    --color-fill-neutral-mild: var(--fill-neutral-mild);
+    --color-fill-neutral: var(--fill-neutral);
+    --color-fill-neutral-bold: var(--fill-neutral-bold);
+    --color-fill-brand: var(--fill-brand);
+    
+    /* Semantic Success */
+    --color-fill-semantic-success-mildest: var(--fill-semantic-success-mildest);
+    --color-fill-semantic-success-mild: var(--fill-semantic-success-mild);
+    --color-fill-semantic-success: var(--fill-semantic-success);
+    --color-fill-semantic-success-bold: var(--fill-semantic-success-bold);
+    
+    /* Semantic Warning */
+    --color-fill-semantic-warning-mildest: var(--fill-semantic-warning-mildest);
+    --color-fill-semantic-warning-mild: var(--fill-semantic-warning-mild);
+    --color-fill-semantic-warning: var(--fill-semantic-warning);
+    --color-fill-semantic-warning-bold: var(--fill-semantic-warning-bold);
+    
+    /* Semantic Error */
+    --color-fill-semantic-error-mildest: var(--fill-semantic-error-mildest);
+    --color-fill-semantic-error-mild: var(--fill-semantic-error-mild);
+    --color-fill-semantic-error: var(--fill-semantic-error);
+    --color-fill-semantic-error-bold: var(--fill-semantic-error-bold);
+    --color-fill-semantic-error-bolder: var(--fill-semantic-error-bolder);
+    
+    /* Semantic Info */
+    --color-fill-semantic-info-mildest: var(--fill-semantic-info-mildest);
+    --color-fill-semantic-info-mild: var(--fill-semantic-info-mild);
+    --color-fill-semantic-info: var(--fill-semantic-info);
+    --color-fill-semantic-info-bold: var(--fill-semantic-info-bold);
+    
+    /* Semantic Highlight */
+    --color-fill-semantic-highlight-mildest: var(--fill-semantic-highlight-mildest);
+    --color-fill-semantic-highlight-mild: var(--fill-semantic-highlight-mild);
+    --color-fill-semantic-highlight: var(--fill-semantic-highlight);
+    --color-fill-semantic-highlight-bold: var(--fill-semantic-highlight-bold);
+    
+    /* Semantic On/Off */
+    --color-fill-semantic-on: var(--fill-semantic-on);
+    --color-fill-semantic-off: var(--fill-semantic-off);
+    
+    /* Overlay colors */
+    --color-overlay-base: var(--overlay-base);
+    --color-overlay-container: var(--overlay-container);
+    --color-overlay-base-container: var(--overlay-base-container);
+    --color-overlay-neutral: var(--overlay-neutral);
+    --color-overlay-backdrop-bold: var(--overlay-backdrop-bold);
+    --color-overlay-semantic-success: var(--overlay-semantic-success);
+    --color-overlay-semantic-warning: var(--overlay-semantic-warning);
+    --color-overlay-semantic-error: var(--overlay-semantic-error);
+    --color-overlay-semantic-info: var(--overlay-semantic-info);
+    --color-overlay-semantic-info-light: var(--overlay-semantic-info-light);
+    --color-overlay-semantic-highlight: var(--overlay-semantic-highlight);
+    
+    /* Boundary colors */
+    --color-boundary-border-mildest: var(--boundary-border-mildest);
+    --color-boundary-border-milder: var(--boundary-border-milder);
+    --color-boundary-border-mild: var(--boundary-border-mild);
+    --color-boundary-border: var(--boundary-border);
+    --color-boundary-border-boldest: var(--boundary-border-boldest);
+    --color-boundary-border-inverse: var(--boundary-border-inverse);
+    --color-boundary-divider-mildest: var(--boundary-divider-mildest);
+    --color-boundary-divider: var(--boundary-divider);
+    --color-boundary-brand: var(--boundary-brand);
+    
+    /* Boundary Semantic */
+    --color-boundary-semantic-success-mildest: var(--boundary-semantic-success-mildest);
+    --color-boundary-semantic-success-mild: var(--boundary-semantic-success-mild);
+    --color-boundary-semantic-success: var(--boundary-semantic-success);
+    --color-boundary-semantic-warning-mildest: var(--boundary-semantic-warning-mildest);
+    --color-boundary-semantic-warning-mild: var(--boundary-semantic-warning-mild);
+    --color-boundary-semantic-warning: var(--boundary-semantic-warning);
+    --color-boundary-semantic-error-mildest: var(--boundary-semantic-error-mildest);
+    --color-boundary-semantic-error-mild: var(--boundary-semantic-error-mild);
+    --color-boundary-semantic-error: var(--boundary-semantic-error);
+    --color-boundary-semantic-error-bold: var(--boundary-semantic-error-bold);
+    --color-boundary-semantic-info-mildest: var(--boundary-semantic-info-mildest);
+    --color-boundary-semantic-info-mild: var(--boundary-semantic-info-mild);
+    --color-boundary-semantic-info: var(--boundary-semantic-info);
+    --color-boundary-semantic-highlight-mildest: var(--boundary-semantic-highlight-mildest);
+    --color-boundary-semantic-highlight-mild: var(--boundary-semantic-highlight-mild);
+    --color-boundary-semantic-highlight: var(--boundary-semantic-highlight);
+    
+    /* Shadow colors */
+    --color-shadow: var(--shadow);
+    --color-shadow-5: var(--shadow-5);
+    --color-shadow-10: var(--shadow-10);
+    --color-shadow-20: var(--shadow-20);
+    --color-shadow-25: var(--shadow-25);
+    --color-shadow-100: var(--shadow-100);
+    --color-shadow-50: var(--shadow-50);
+    --color-scrim: var(--scrim);
+    --color-key: var(--key);
+    
+    /* Colores con opacidad */
+    --color-fill-neutral-0-5: var(--fill-neutral-0-5);
+    --color-fill-semantic-info-mildest-0-1: var(--fill-semantic-info-mildest-0-1);
+    --color-fill-semantic-info-mildest-0-4: var(--fill-semantic-info-mildest-0-4);
+    --color-fill-semantic-info-mildest-0-42: var(--fill-semantic-info-mildest-0-42);
+    --color-fill-semantic-success-mild-0-1: var(--fill-semantic-success-mild-0-1);
+    --color-fill-semantic-success-mild-0-7: var(--fill-semantic-success-mild-0-7);
+    --color-fill-surface-0-6: var(--fill-surface-0-6);
+    --color-icon-disabled-0-2: var(--icon-disabled-0-2);
+    --color-icon-disabled-0-5: var(--icon-disabled-0-5);
+    --color-icon-inverse-0-7: var(--icon-inverse-0-7);
+    --color-icon-primary-0-5: var(--icon-primary-0-5);
+    --color-text-inverse-0-5: var(--text-inverse-0-5);
+    --color-text-placeholder-0-5: var(--text-placeholder-0-5);
+    --color-text-secondary-0-5: var(--text-secondary-0-5);
+    --color-text-semantic-success-0-5: var(--text-semantic-success-0-5);
+    
+    /* Workspace icon colors */
+    --ws-icon-color-1: var(--ws-icon-1);
+    --ws-icon-color-2: var(--ws-icon-2);
+    --ws-icon-color-3: var(--ws-icon-3);
+    --ws-icon-color-4: var(--ws-icon-4);
+    --ws-icon-color-5: var(--ws-icon-5);
+    --ws-icon-color-6: var(--ws-icon-6);
+    --ws-icon-color-7: var(--ws-icon-7);
+    --ws-icon-color-8: var(--ws-icon-8);
+    --ws-icon-color-9: var(--ws-icon-9);
+    
+    /* Freddy colors */
+    --freddy-border-1: var(--freddy-b-1);
+    --freddy-border-2: var(--freddy-b-2);
+    --freddy-border-3: var(--freddy-b-3);
+    --freddy-fill-1: var(--freddy-f-1);
+    --freddy-fill-2: var(--freddy-f-2);
+    --freddy-fill-3: var(--freddy-f-3);
+  }
+  
+  :root {
+    /* Base colors */
     --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --foreground: oklch(0.27 0.032 235);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.27 0.032 235);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
+    --popover-foreground: oklch(0.27 0.032 235);
+    --primary: oklch(0.27 0.032 235);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.97 0.003 240);
+    --secondary-foreground: oklch(0.27 0.032 235);
+    --muted: oklch(0.97 0.003 240);
+    --muted-foreground: oklch(0.62 0.014 240);
+    --accent: oklch(0.97 0.003 240);
+    --accent-foreground: oklch(0.27 0.032 235);
+    --destructive: oklch(0.55 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.94 0.003 240);
+    --input: oklch(0.94 0.003 240);
+    --ring: oklch(0.89 0.005 240);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
-}
-
-.dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
-}
+    
+    /* Chart colors - todos los 20 */
+    --chart-1: oklch(0.68 0.14 250);
+    --chart-2: oklch(0.78 0.09 235);
+    --chart-3: oklch(0.62 0.18 55);
+    --chart-4: oklch(0.85 0.14 75);
+    --chart-5: oklch(0.58 0.08 115);
+    --chart-6: oklch(0.70 0.12 145);
+    --chart-7: oklch(0.60 0.06 65);
+    --chart-8: oklch(0.82 0.04 55);
+    --chart-9: oklch(0.61 0.07 205);
+    --chart-10: oklch(0.84 0.05 190);
+    --chart-11: oklch(0.54 0.20 35);
+    --chart-12: oklch(0.78 0.14 15);
+    --chart-13: oklch(0.42 0.12 255);
+    --chart-14: oklch(0.56 0.11 220);
+    --chart-15: oklch(0.57 0.18 300);
+    --chart-16: oklch(0.42 0.14 280);
+    --chart-17: oklch(0.68 0.07 55);
+    --chart-18: oklch(0.80 0.16 70);
+    --chart-19: oklch(0.72 0.16 290);
+    --chart-20: oklch(0.71 0.20 355);
+    
+    /* Sidebar */
+    --sidebar: oklch(0.97 0.00 0);
+    --sidebar-foreground: oklch(0.27 0.032 235);
+    --sidebar-primary: oklch(0.27 0.032 235);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.97 0.003 240);
+    --sidebar-accent-foreground: oklch(0.27 0.032 235);
+    --sidebar-border: oklch(0.94 0.003 240);
+    --sidebar-ring: oklch(0.89 0.005 240);
+    
+    /* Text colors */
+    --text-brand: oklch(0.38 0.15 265);
+    --text-primary: oklch(0.27 0.032 235);
+    --text-secondary: oklch(0.40 0.028 235);
+    --text-disabled: oklch(0.57 0.014 235);
+    --text-placeholder: oklch(0.64 0.012 235);
+    --text-inverse: oklch(1 0 0);
+    --text-semantic-success: oklch(0.48 0.11 168);
+    --text-semantic-warning: oklch(0.52 0.12 50);
+    --text-semantic-error: oklch(0.53 0.20 25);
+    --text-semantic-info: oklch(0.38 0.15 265);
+    --text-semantic-highlight: oklch(0.55 0.20 290);
+    
+    /* Icon colors */
+    --icon-primary: oklch(0.30 0.030 235);
+    --icon-secondary: oklch(0.40 0.028 235);
+    --icon-selected: oklch(0.38 0.15 265);
+    --icon-disabled: oklch(0.57 0.014 235);
+    --icon-inverse: oklch(1 0 0);
+    --icon-semantic-success: oklch(0.48 0.11 168);
+    --icon-semantic-warning: oklch(0.52 0.12 50);
+    --icon-semantic-error: oklch(0.53 0.20 25);
+    --icon-semantic-info: oklch(0.54 0.16 265);
+    --icon-semantic-highlight: oklch(0.55 0.20 290);
+    
+    /* Fill colors */
+    --fill-surface: oklch(1 0 0);
+    --fill-container: oklch(0.97 0.003 240);
+    --fill-base: oklch(0.94 0.005 235);
+    --fill-base-bold: oklch(0.91 0.008 230);
+    --fill-neutral-mild: oklch(0.42 0.040 230);
+    --fill-neutral: oklch(0.35 0.040 235);
+    --fill-neutral-bold: oklch(0.27 0.032 235);
+    --fill-brand: oklch(0.54 0.16 265);
+    
+    /* Semantic Success */
+    --fill-semantic-success-mildest: oklch(0.92 0.06 168);
+    --fill-semantic-success-mild: oklch(0.68 0.14 170);
+    --fill-semantic-success: oklch(0.58 0.13 168);
+    --fill-semantic-success-bold: oklch(0.48 0.11 168);
+    
+    /* Semantic Warning */
+    --fill-semantic-warning-mildest: oklch(0.94 0.08 60);
+    --fill-semantic-warning-mild: oklch(0.68 0.15 50);
+    --fill-semantic-warning: oklch(0.60 0.14 48);
+    --fill-semantic-warning-bold: oklch(0.52 0.12 50);
+    
+    /* Semantic Error */
+    --fill-semantic-error-mildest: oklch(0.95 0.05 15);
+    --fill-semantic-error-mild: oklch(0.72 0.20 20);
+    --fill-semantic-error: oklch(0.63 0.22 23);
+    --fill-semantic-error-bold: oklch(0.53 0.20 25);
+    --fill-semantic-error-bolder: oklch(0.47 0.18 25);
+    
+    /* Semantic Info */
+    --fill-semantic-info-mildest: oklch(0.93 0.04 255);
+    --fill-semantic-info-mild: oklch(0.76 0.12 260);
+    --fill-semantic-info: oklch(0.70 0.14 262);
+    --fill-semantic-info-bold: oklch(0.38 0.15 265);
+    
+    /* Semantic Highlight */
+    --fill-semantic-highlight-mildest: oklch(0.95 0.05 290);
+    --fill-semantic-highlight-mild: oklch(0.75 0.16 288);
+    --fill-semantic-highlight: oklch(0.68 0.18 289);
+    --fill-semantic-highlight-bold: oklch(0.55 0.20 290);
+    
+    /* Semantic On/Off */
+    --fill-semantic-on: oklch(0.54 0.16 265);
+    --fill-semantic-off: oklch(0.57 0.014 235);
+    
+    /* Overlay colors */
+    --overlay-base: oklch(0.80 0.01 235 / 0.2);
+    --overlay-container: oklch(1 0 0);
+    --overlay-base-container: oklch(0.97 0.003 240);
+    --overlay-neutral: oklch(0.80 0.01 235 / 0.2);
+    --overlay-backdrop-bold: oklch(0.27 0.032 235 / 0.5);
+    --overlay-semantic-success: oklch(0.78 0.12 170 / 0.2);
+    --overlay-semantic-warning: oklch(0.78 0.14 52 / 0.2);
+    --overlay-semantic-error: oklch(0.78 0.18 22 / 0.2);
+    --overlay-semantic-info: oklch(0.85 0.10 260 / 0.2);
+    --overlay-semantic-info-light: oklch(0.85 0.10 260 / 0.1);
+    --overlay-semantic-highlight: oklch(0.82 0.14 288 / 0.2);
+    
+    /* Boundary colors */
+    --boundary-border-mildest: oklch(0.94 0.005 235);
+    --boundary-border-milder: oklch(0.91 0.008 230);
+    --boundary-border-mild: oklch(0.86 0.010 230);
+    --boundary-border: oklch(0.64 0.012 235);
+    --boundary-border-boldest: oklch(0.25 0.020 235);
+    --boundary-border-inverse: oklch(1 0 0);
+    --boundary-divider-mildest: oklch(0.94 0.005 235);
+    --boundary-divider: oklch(0.86 0.010 230);
+    --boundary-brand: oklch(0.54 0.16 265);
+    
+    /* Boundary Semantic */
+    --boundary-semantic-success-mildest: oklch(0.92 0.06 168);
+    --boundary-semantic-success-mild: oklch(0.84 0.10 170);
+    --boundary-semantic-success: oklch(0.58 0.13 168);
+    --boundary-semantic-warning-mildest: oklch(0.94 0.08 60);
+    --boundary-semantic-warning-mild: oklch(0.86 0.12 55);
+    --boundary-semantic-warning: oklch(0.60 0.14 48);
+    --boundary-semantic-error-mildest: oklch(0.95 0.05 15);
+    --boundary-semantic-error-mild: oklch(0.88 0.10 18);
+    --boundary-semantic-error: oklch(0.63 0.22 23);
+    --boundary-semantic-error-bold: oklch(0.47 0.18 25);
+    --boundary-semantic-info-mildest: oklch(0.93 0.04 255);
+    --boundary-semantic-info-mild: oklch(0.88 0.08 258);
+    --boundary-semantic-info: oklch(0.70 0.14 262);
+    --boundary-semantic-highlight-mildest: oklch(0.95 0.05 290);
+    --boundary-semantic-highlight-mild: oklch(0.88 0.10 288);
+    --boundary-semantic-highlight: oklch(0.68 0.18 289);
+    
+    /* Shadow colors */
+    --shadow: oklch(0.27 0.032 235);
+    --shadow-5: oklch(0.27 0.032 235 / 0.05);
+    --shadow-10: oklch(0.27 0.032 235 / 0.10);
+    --shadow-20: oklch(0.27 0.032 235 / 0.20);
+    --shadow-25: oklch(0.27 0.032 235 / 0.25);
+    --shadow-100: oklch(0.27 0.032 235);
+    --shadow-50: oklch(0.97 0.003 240);
+    --scrim: oklch(0.27 0.032 235);
+    --key: oklch(0 0 0);
+    
+    /* Colores con opacidad específicos */
+    --fill-neutral-0-5: oklch(0.35 0.040 235 / 0.5);
+    --fill-semantic-info-mildest-0-1: oklch(0.93 0.04 255 / 0.1);
+    --fill-semantic-info-mildest-0-4: oklch(0.93 0.04 255 / 0.4);
+    --fill-semantic-info-mildest-0-42: oklch(0.93 0.04 255 / 0.42);
+    --fill-semantic-success-mild-0-1: oklch(0.68 0.14 170 / 0.1);
+    --fill-semantic-success-mild-0-7: oklch(0.68 0.14 170 / 0.7);
+    --fill-surface-0-6: oklch(1 0 0 / 0.6);
+    --icon-disabled-0-2: oklch(0.57 0.014 235 / 0.2);
+    --icon-disabled-0-5: oklch(0.57 0.014 235 / 0.5);
+    --icon-inverse-0-7: oklch(1 0 0 / 0.7);
+    --icon-primary-0-5: oklch(0.36 0.028 235 / 0.5);
+    --text-inverse-0-5: oklch(1 0 0 / 0.5);
+    --text-placeholder-0-5: oklch(0.67 0.012 235 / 0.5);
+    --text-secondary-0-5: oklch(0.36 0.028 235 / 0.5);
+    --text-semantic-success-0-5: oklch(0.50 0.12 168 / 0.5);
+    
+    /* Workspace icon colors */
+    --ws-icon-1: oklch(0.56 0.16 260);
+    --ws-icon-2: oklch(0.58 0.14 155);
+    --ws-icon-3: oklch(0.66 0.22 15);
+    --ws-icon-4: oklch(0.32 0.025 190);
+    --ws-icon-5: oklch(0.58 0.10 245);
+    --ws-icon-6: oklch(0.58 0.18 295);
+    --ws-icon-7: oklch(0.63 0.16 50);
+    --ws-icon-8: oklch(0.48 0.08 340);
+    --ws-icon-9: oklch(1 0 0);
+    
+    /* Freddy colors */
+    --freddy-b-1: oklch(0.68 0.16 285);
+    --freddy-b-2: oklch(0.58 0.18 250);
+    --freddy-b-3: oklch(0.85 0.16 80);
+    --freddy-f-1: oklch(0.68 0.16 285 / 0.06);
+    --freddy-f-2: oklch(0.58 0.18 250 / 0.06);
+    --freddy-f-3: oklch(0.85 0.16 80 / 0.06);
+  }
+  
+  .dark {
+    /* Base colors */
+    --background: oklch(0.20 0.025 235);
+    --foreground: oklch(1 0 0);
+    --card: oklch(0.20 0.025 235);
+    --card-foreground: oklch(1 0 0);
+    --popover: oklch(0.20 0.025 235);
+    --popover-foreground: oklch(1 0 0);
+    --primary: oklch(1 0 0);
+    --primary-foreground: oklch(0.20 0.025 235);
+    --secondary: oklch(0.30 0.030 235);
+    --secondary-foreground: oklch(1 0 0);
+    --muted: oklch(0.30 0.030 235);
+    --muted-foreground: oklch(0.75 0.01 240);
+    --accent: oklch(0.30 0.030 235);
+    --accent-foreground: oklch(1 0 0);
+    --destructive: oklch(0.45 0.18 25);
+    --destructive-foreground: oklch(0.65 0.24 25);
+    --border: oklch(0.30 0.030 235);
+    --input: oklch(0.30 0.030 235);
+    --ring: oklch(0.50 0.05 240);
+    /* Chart colors mantienen su valor (son agnósticos del tema) */
+    --chart-1: oklch(0.68 0.14 250);
+    --chart-2: oklch(0.78 0.09 235);
+    --chart-3: oklch(0.62 0.18 55);
+    --chart-4: oklch(0.85 0.14 75);
+    --chart-5: oklch(0.58 0.08 115);
+    --chart-6: oklch(0.70 0.12 145);
+    --chart-7: oklch(0.60 0.06 65);
+    --chart-8: oklch(0.82 0.04 55);
+    --chart-9: oklch(0.61 0.07 205);
+    --chart-10: oklch(0.84 0.05 190);
+    --chart-11: oklch(0.54 0.20 35);
+    --chart-12: oklch(0.78 0.14 15);
+    --chart-13: oklch(0.42 0.12 255);
+    --chart-14: oklch(0.56 0.11 220);
+    --chart-15: oklch(0.57 0.18 300);
+    --chart-16: oklch(0.42 0.14 280);
+    --chart-17: oklch(0.68 0.07 55);
+    --chart-18: oklch(0.80 0.16 70);
+    --chart-19: oklch(0.72 0.16 290);
+    --chart-20: oklch(0.71 0.20 355);
+    /* Sidebar dark */
+    --sidebar: oklch(0.20 0.025 235);
+    --sidebar-foreground: oklch(1 0 0);
+    --sidebar-primary: oklch(1 0 0);
+    --sidebar-primary-foreground: oklch(0.20 0.025 235);
+    --sidebar-accent: oklch(0.30 0.030 235);
+    --sidebar-accent-foreground: oklch(1 0 0);
+    --sidebar-border: oklch(0.30 0.030 235);
+    --sidebar-ring: oklch(0.50 0.05 240);
+    /* Text colors dark */
+    --text-brand: oklch(0.70 0.14 262);
+    --text-primary: oklch(0.95 0.005 240);
+    --text-secondary: oklch(0.82 0.01 240);
+    --text-disabled: oklch(0.65 0.012 240);
+    --text-placeholder: oklch(0.58 0.014 240);
+    --text-inverse: oklch(0.20 0.025 235);
+    --text-semantic-success: oklch(0.72 0.13 168);
+    --text-semantic-warning: oklch(0.75 0.14 50);
+    --text-semantic-error: oklch(0.70 0.22 23);
+    --text-semantic-info: oklch(0.70 0.14 262);
+    --text-semantic-highlight: oklch(0.75 0.18 289);
+    /* Icon colors dark */
+    --icon-primary: oklch(0.90 0.008 240);
+    --icon-secondary: oklch(0.82 0.01 240);
+    --icon-selected: oklch(0.70 0.14 262);
+    --icon-disabled: oklch(0.65 0.012 240);
+    --icon-inverse: oklch(0.20 0.025 235);
+    --icon-semantic-success: oklch(0.72 0.13 168);
+    --icon-semantic-warning: oklch(0.75 0.14 50);
+    --icon-semantic-error: oklch(0.70 0.22 23);
+    --icon-semantic-info: oklch(0.70 0.14 262);
+    --icon-semantic-highlight: oklch(0.75 0.18 289);
+    /* Fill colors dark */
+    --fill-surface: oklch(0.25 0.028 235);
+    --fill-container: oklch(0.30 0.030 235);
+    --fill-base: oklch(0.35 0.032 235);
+    --fill-base-bold: oklch(0.40 0.035 235);
+    --fill-neutral-mild: oklch(0.50 0.040 235);
+    --fill-neutral: oklch(0.45 0.038 235);
+    --fill-neutral-bold: oklch(0.40 0.035 235);
+    --fill-brand: oklch(0.60 0.14 265);
+    /* Semantic Success dark */
+    --fill-semantic-success-mildest: oklch(0.35 0.05 168);
+    --fill-semantic-success-mild: oklch(0.68 0.14 170);
+    --fill-semantic-success: oklch(0.58 0.13 168);
+    --fill-semantic-success-bold: oklch(0.72 0.13 168);
+    /* Semantic Warning dark */
+    --fill-semantic-warning-mildest: oklch(0.40 0.06 55);
+    --fill-semantic-warning-mild: oklch(0.68 0.15 50);
+    --fill-semantic-warning: oklch(0.60 0.14 48);
+    --fill-semantic-warning-bold: oklch(0.75 0.14 50);
+    /* Semantic Error dark */
+    --fill-semantic-error-mildest: oklch(0.35 0.08 20);
+    --fill-semantic-error-mild: oklch(0.72 0.20 20);
+    --fill-semantic-error: oklch(0.63 0.22 23);
+    --fill-semantic-error-bold: oklch(0.70 0.22 23);
+    --fill-semantic-error-bolder: oklch(0.60 0.20 25);
+    /* Semantic Info dark */
+    --fill-semantic-info-mildest: oklch(0.35 0.06 260);
+    --fill-semantic-info-mild: oklch(0.76 0.12 260);
+    --fill-semantic-info: oklch(0.70 0.14 262);
+    --fill-semantic-info-bold: oklch(0.65 0.13 265);
+    /* Semantic Highlight dark */
+    --fill-semantic-highlight-mildest: oklch(0.40 0.08 288);
+    --fill-semantic-highlight-mild: oklch(0.75 0.16 288);
+    --fill-semantic-highlight: oklch(0.68 0.18 289);
+    --fill-semantic-highlight-bold: oklch(0.75 0.18 289);
+    /* Semantic On/Off dark */
+    --fill-semantic-on: oklch(0.60 0.14 265);
+    --fill-semantic-off: oklch(0.65 0.012 240);
+    /* Overlay colors dark */
+    --overlay-base: oklch(0.50 0.02 240 / 0.2);
+    --overlay-container: oklch(0.25 0.028 235);
+    --overlay-base-container: oklch(0.30 0.030 235);
+    --overlay-neutral: oklch(0.50 0.02 240 / 0.2);
+    --overlay-backdrop-bold: oklch(0.10 0.015 235 / 0.7);
+    --overlay-semantic-success: oklch(0.68 0.14 170 / 0.15);
+    --overlay-semantic-warning: oklch(0.68 0.15 50 / 0.15);
+    --overlay-semantic-error: oklch(0.72 0.20 20 / 0.15);
+    --overlay-semantic-info: oklch(0.70 0.14 262 / 0.15);
+    --overlay-semantic-info-light: oklch(0.70 0.14 262 / 0.08);
+    --overlay-semantic-highlight: oklch(0.75 0.16 288 / 0.15);
+    /* Boundary colors dark */
+    --boundary-border-mildest: oklch(0.35 0.032 235);
+    --boundary-border-milder: oklch(0.40 0.035 235);
+    --boundary-border-mild: oklch(0.45 0.038 235);
+    --boundary-border: oklch(0.58 0.014 240);
+    --boundary-border-boldest: oklch(0.85 0.008 240);
+    --boundary-border-inverse: oklch(0.20 0.025 235);
+    --boundary-divider-mildest: oklch(0.35 0.032 235);
+    --boundary-divider: oklch(0.45 0.038 235);
+    --boundary-brand: oklch(0.60 0.14 265);
+    /* Boundary Semantic dark */
+    --boundary-semantic-success-mildest: oklch(0.35 0.05 168);
+    --boundary-semantic-success-mild: oklch(0.55 0.10 170);
+    --boundary-semantic-success: oklch(0.58 0.13 168);
+    --boundary-semantic-warning-mildest: oklch(0.40 0.06 55);
+    --boundary-semantic-warning-mild: oklch(0.58 0.12 52);
+    --boundary-semantic-warning: oklch(0.60 0.14 48);
+    --boundary-semantic-error-mildest: oklch(0.35 0.08 20);
+    --boundary-semantic-error-mild: oklch(0.55 0.15 22);
+    --boundary-semantic-error: oklch(0.63 0.22 23);
+    --boundary-semantic-error-bold: oklch(0.60 0.20 25);
+    --boundary-semantic-info-mildest: oklch(0.35 0.06 260);
+    --boundary-semantic-info-mild: oklch(0.55 0.10 262);
+    --boundary-semantic-info: oklch(0.70 0.14 262);
+    --boundary-semantic-highlight-mildest: oklch(0.40 0.08 288);
+    --boundary-semantic-highlight-mild: oklch(0.58 0.12 288);
+    --boundary-semantic-highlight: oklch(0.68 0.18 289);
+    /* Shadow colors dark */
+    --shadow: oklch(0.10 0.015 235);
+    --shadow-5: oklch(0.10 0.015 235 / 0.15);
+    --shadow-10: oklch(0.10 0.015 235 / 0.25);
+    --shadow-20: oklch(0.10 0.015 235 / 0.35);
+    --shadow-25: oklch(0.10 0.015 235 / 0.40);
+    --shadow-100: oklch(0.10 0.015 235);
+    --shadow-50: oklch(0.30 0.030 235);
+    --scrim: oklch(0.10 0.015 235);
+    --key: oklch(0 0 0);
+    /* Colores con opacidad específicos dark */
+    --fill-neutral-0-5: oklch(0.45 0.038 235 / 0.5);
+    --fill-semantic-info-mildest-0-1: oklch(0.35 0.06 260 / 0.1);
+    --fill-semantic-info-mildest-0-4: oklch(0.35 0.06 260 / 0.4);
+    --fill-semantic-info-mildest-0-42: oklch(0.35 0.06 260 / 0.42);
+    --fill-semantic-success-mild-0-1: oklch(0.68 0.14 170 / 0.1);
+    --fill-semantic-success-mild-0-7: oklch(0.68 0.14 170 / 0.7);
+    --fill-surface-0-6: oklch(0.25 0.028 235 / 0.6);
+    --icon-disabled-0-2: oklch(0.65 0.012 240 / 0.2);
+    --icon-disabled-0-5: oklch(0.65 0.012 240 / 0.5);
+    --icon-inverse-0-7: oklch(0.20 0.025 235 / 0.7);
+    --icon-primary-0-5: oklch(0.90 0.008 240 / 0.5);
+    --text-inverse-0-5: oklch(0.20 0.025 235 / 0.5);
+    --text-placeholder-0-5: oklch(0.58 0.014 240 / 0.5);
+    --text-secondary-0-5: oklch(0.95 0.005 240 / 0.5);
+    --text-semantic-success-0-5: oklch(0.72 0.13 168 / 0.5);
+    /* Workspace icon colors (mantienen valores) */
+    --ws-icon-1: oklch(0.56 0.16 260);
+    --ws-icon-2: oklch(0.58 0.14 155);
+    --ws-icon-3: oklch(0.66 0.22 15);
+    --ws-icon-4: oklch(0.32 0.025 190);
+    --ws-icon-5: oklch(0.58 0.10 245);
+    --ws-icon-6: oklch(0.58 0.18 295);
+    --ws-icon-7: oklch(0.63 0.16 50);
+    --ws-icon-8: oklch(0.48 0.08 340);
+    --ws-icon-9: oklch(1 0 0);
+    /* Freddy colors (mantienen valores) */
+    --freddy-b-1: oklch(0.68 0.16 285);
+    --freddy-b-2: oklch(0.58 0.18 250);
+    --freddy-b-3: oklch(0.85 0.16 80);
+    --freddy-f-1: oklch(0.68 0.16 285 / 0.06);
+    --freddy-f-2: oklch(0.58 0.18 250 / 0.06);
+    --freddy-f-3: oklch(0.85 0.16 80 / 0.06);
+    }
 
 @layer base {
     * {

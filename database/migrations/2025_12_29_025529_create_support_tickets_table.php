@@ -13,18 +13,23 @@ return new class extends Migration
     {
         Schema::create('support_tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->string('ticket_number')->unique();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('certificate_request_id')->nullable()->constrained();
+            $table->string('subject');
             $table->string('category');
-            $table->string('status');
-            $table->string('priority');
+            $table->string('status')->default('open');
+            $table->string('priority')->default('low');
+            $table->string('source')->default('portal');
+            $table->string('urgency')->default('low');
+            $table->string('impact')->default('low');
+            $table->string('group')->nullable();
+            $table->string('agent')->nullable();
             $table->text('description');
             $table->json('provider_payload')->nullable();
             $table->timestamps();
         });
-        
     }
-    
 
     /**
      * Reverse the migrations.

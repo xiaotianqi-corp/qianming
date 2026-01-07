@@ -25,7 +25,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Tickets',
-        href: support.index(), 
+        href: support.tickets.index(),
         icon: Ticket,
     },
 ];
