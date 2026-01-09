@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -71,5 +72,22 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->hasRole('admin');
+    }
+
+    public function agentGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(AgentGroup::class, 'agent_group_members')
+            ->withPivot('is_observer')
+            ->withTimestamps();
+    }
+
+    public function assignedTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class, 'assigned_to');
+    }
+
+    public function isInGroup(int $groupId): bool
+    {
+        return $this->agentGroups()->where('agent_groups.id', $groupId)->exists();
     }
 }

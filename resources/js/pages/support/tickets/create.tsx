@@ -10,6 +10,11 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
+interface EnumOption {
+  value: string;
+  label: string;
+}
+
 interface CertificateRequest {
   id: number;
   external_id: string;
@@ -17,6 +22,10 @@ interface CertificateRequest {
 
 interface Props {
   certificateRequests: CertificateRequest[];
+  categories: { value: string; label: string; description?: string }[];
+  statuses: EnumOption[];
+  priorities: EnumOption[];
+  sources: EnumOption[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -35,22 +44,28 @@ const generatePreviewTicketNumber = () => {
   return `TKT-${datePart}-${randomPart}`;
 };
 
-export default function Create({ certificateRequests }: Props) {
+export default function Create({
+  certificateRequests,
+  categories,
+  statuses,
+  priorities,
+  sources
+}: Props) {
   const [copied, setCopied] = useState(false);
   const [previewNumber] = useState(generatePreviewTicketNumber());
   const { data, setData, post, processing, errors } = useForm({
     ticket_number: previewNumber,
     requester: '',
     subject: '',
-    source: '',
-    status: '',
+    source: sources[0]?.value || '',
+    status: statuses[0]?.value || '',
+    priority: priorities[0]?.value || '',
+    category: '',
     urgency: '',
     impact: '',
-    priority: '',
     group: '',
     agent: '',
     description: '',
-    category: '',
     certificate_request_id: '',
   });
 
@@ -72,123 +87,140 @@ export default function Create({ certificateRequests }: Props) {
         <div className="px-4 py-4">
           <form onSubmit={submit} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm">
             <FieldGroup>
-                <FieldGroup>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <FieldLegend className="text-2xl">New Support Request</FieldLegend>
-                      <FieldDescription>Fill out the form below to open a new case.</FieldDescription>
-                    </div>
+              <FieldGroup>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <FieldLegend className="text-2xl">New Support Request</FieldLegend>
+                    <FieldDescription>Fill out the form below to open a new case.</FieldDescription>
+                  </div>
 
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Case Identifier</span>
-                      <div className="flex items-center gap-1 bg-gray-50 border rounded-md p-1 pl-3">
-                        <code className="text-sm font-mono font-bold text-blue-600">
-                          {data.ticket_number}
-                        </code>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-gray-400 hover:text-blue-600"
-                          onClick={copyToClipboard}
-                        >
-                          {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                        </Button>
-                      </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <span className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Case Identifier</span>
+                    <div className="flex items-center gap-1 bg-gray-50 border rounded-md p-1 pl-3">
+                      <code className="text-sm font-mono font-bold text-blue-600">
+                        {data.ticket_number}
+                      </code>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-gray-400 hover:text-blue-600"
+                        onClick={copyToClipboard}
+                      >
+                        {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                      </Button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field>
-                      <FieldLabel>Requester</FieldLabel>
-                      <Input
-                        placeholder="Search"
-                        value={data.requester}
-                        onChange={(e) => setData('requester', e.target.value)}
-                        required
-                      />
-                    </Field>
-                    <Field>
-                      <FieldLabel>Subject</FieldLabel>
-                      <Input
-                        placeholder="Brief summary of the issue"
-                        value={data.subject}
-                        onChange={(e) => setData('subject', e.target.value)}
-                        required
-                      />
-                    </Field>
-                  </div>
-                  <FieldSeparator />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field>
-                      <FieldLabel>Source</FieldLabel>
-                      <Select defaultValue="phone" value={data.source} onValueChange={(v) => setData('source', v)}>
-                        <SelectTrigger><SelectValue placeholder="Source" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="phone">Phone</SelectItem>
-                          <SelectItem value="email">Email</SelectItem>
-                          <SelectItem value="portal">Portal</SelectItem>
-                          <SelectItem value="chat">Chat</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                    <Field>
-                      <FieldLabel>Status *</FieldLabel>
-                      <Select defaultValue="open" value={data.status} onValueChange={(v) => setData('status', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="open">Open</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="resolved">Resolved</SelectItem>
-                          <SelectItem value="closed">Closed</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <Field>
-                      <FieldLabel>Urgency</FieldLabel>
-                      <Select defaultValue="low" value={data.urgency} onValueChange={(v) => setData('urgency', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Urgency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                    <Field>
-                      <FieldLabel>Impact</FieldLabel>
-                      <Select defaultValue="low" value={data.impact} onValueChange={(v) => setData('impact', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Impact" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                    <Field>
-                      <FieldLabel htmlFor="priority">Priority *</FieldLabel>
-                      <Select defaultValue="low" value={data.priority} onValueChange={(v) => setData('priority', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Priority" id="priority" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                          <SelectItem value="urgent">Urgent</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                  </div>
-                </FieldGroup>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel>Requester</FieldLabel>
+                    <Input
+                      placeholder="Search"
+                      value={data.requester}
+                      onChange={(e) => setData('requester', e.target.value)}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>Subject</FieldLabel>
+                    <Input
+                      placeholder="Brief summary of the issue"
+                      value={data.subject}
+                      onChange={(e) => setData('subject', e.target.value)}
+                      required
+                    />
+                  </Field>
+                </div>
+                <FieldSeparator />
+                <div className="grid grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel>Source</FieldLabel>
+                    <Select
+                      value={data.source}
+                      onValueChange={(v) => setData('source', v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Source" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sources.map((src) => (
+                          <SelectItem key={src.value} value={src.value}>
+                            {src.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.source && <p className="text-red-500 text-xs mt-1">{errors.source}</p>}
+                  </Field>
+                  <Field>
+                    <FieldLabel>Status *</FieldLabel>
+                    <Select
+                      value={data.status}
+                      onValueChange={(v) => setData('status', v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {statuses.map((s) => (
+                          <SelectItem key={s.value} value={s.value}>
+                            {s.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.status && <p className="text-red-500 text-xs mt-1">{errors.status}</p>}
+                  </Field>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <Field>
+                    <FieldLabel>Urgency</FieldLabel>
+                    <Select defaultValue="low" value={data.urgency} onValueChange={(v) => setData('urgency', v)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Urgency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel>Impact</FieldLabel>
+                    <Select defaultValue="low" value={data.impact} onValueChange={(v) => setData('impact', v)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Impact" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="priority">Priority *</FieldLabel>
+                    <Select
+                      value={data.priority}
+                      onValueChange={(v) => setData('priority', v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" id="priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {priorities.map((p) => (
+                          <SelectItem key={p.value} value={p.value}>
+                            {p.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.priority && <p className="text-red-500 text-xs mt-1">{errors.priority}</p>}
+                  </Field>
+                </div>
+              </FieldGroup>
 
               <FieldSeparator />
 
@@ -229,15 +261,19 @@ export default function Create({ certificateRequests }: Props) {
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="category">Category *</FieldLabel>
-                    <Select defaultValue="identity" value={data.category} onValueChange={(v) => setData('category', v)}>
+                    <Select
+                      value={data.category}
+                      onValueChange={(v) => setData('category', v)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" id="category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="identity">Identity</SelectItem>
-                        <SelectItem value="payment">Payment</SelectItem>
-                        <SelectItem value="issuance">Issuance</SelectItem>
-                        <SelectItem value="technical">Technical</SelectItem>
+                        {categories.map((cat) => (
+                          <SelectItem key={cat.value} value={cat.value}>
+                            {cat.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}

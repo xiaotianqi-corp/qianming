@@ -72,47 +72,6 @@ export default function Show({ ticket }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Ticket #${ticket.ticket_number}`} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto">
-                <div className=" px-4 py-8">
-                    <div className="mb-6">
-                        <Link href="/support/tickets" className="text-sm text-blue-600 hover:text-blue-800">
-                            ← Back to tickets
-                        </Link>
-                    </div>
-
-                    <div className="overflow-hidden rounded-lg bg-white shadow">
-                        <div className="border-b bg-gray-50 px-6 py-4">
-                            <h1 className="text-2xl font-bold">Ticket #{ticket.ticket_number} {ticket.subject}</h1>
-                        </div>
-
-                        <div className="px-6 py-4">
-                            <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <div>
-                                    <dt className="text-sm font-medium text-gray-500">Category</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">{ticket.category}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-sm font-medium text-gray-500">Status</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">{ticket.status}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-sm font-medium text-gray-500">Priority</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">{ticket.priority}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-sm font-medium text-gray-500">Created</dt>
-                                    <dd className="mt-1 text-sm text-gray-900">
-                                        {new Date(ticket.created_at).toLocaleString()}
-                                    </dd>
-                                </div>
-                            </dl>
-                        </div>
-
-                        <div className="border-t px-6 py-4">
-                            <h3 className="mb-2 text-sm font-medium text-gray-900">Description</h3>
-                            <p className="whitespace-pre-wrap text-sm text-gray-700">{ticket.description}</p>
-                        </div>
-                    </div>
-                </div>
                 <div className="flex items-center justify-between border-b bg-background px-6 py-4">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
