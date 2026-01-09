@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\{SupportTicket, CertificateRequest, User, AgentGroup};
-use App\Enums\{TicketStatus, TicketPriority, TicketCategory};
+use App\Models\AuditEvent;
+use App\Enums\{TicketStatus, TicketPriority, TicketCategory, TicketSource};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{DB, Storage};
 use Illuminate\Validation\Rule;
@@ -101,9 +102,26 @@ class TicketController extends Controller
     {
         $validated = $request->validate([
             'subject' => 'required|string|max:255',
-            'description' => 'required|string|min:10',
-            'category' => ['required', Rule::in(TicketCategory::values())],
+            'description' => 'required|string',
+            'email' => 'required_without:requester_id|email',
+            'requester_id' => 'required_without:email|exists:users,id',
             'priority' => ['required', Rule::in(TicketPriority::values())],
+            'status' => ['required', Rule::in(TicketStatus::values())],
+            'source' => ['required', Rule::in(TicketSource::values())],
+            'category' => ['required', Rule::in(TicketCategory::values())],
+            'sub_category' => 'nullable|string',
+            'item_category' => 'nullable|string',
+            'group_id' => 'nullable|exists:groups,id',
+            'agent_id' => 'nullable|exists:users,id',
+            'urgency' => 'nullable|in:1,2,3',
+            'impact' => 'nullable|in:1,2,3',
+            'cc_emails' => 'nullable|array',
+            'custom_fields' => 'nullable|array',
+            'tags' => 'nullable|array',
+            'assets' => 'nullable|array',
+            'assets.*.display_id' => 'required|exists:assets,display_id',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|max:10240',
             'certificate_request_id' => 'nullable|exists:certificate_requests,id',
             'attachments' => 'nullable|array|max:5',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
@@ -117,7 +135,7 @@ class TicketController extends Controller
                 'category' => TicketCategory::from($validated['category']),
                 'priority' => TicketPriority::from($validated['priority']),
                 'status' => TicketStatus::OPEN,
-                'source' => 'portal',
+                'source' => TicketSource::PORTAL,
                 'certificate_request_id' => $validated['certificate_request_id'] ?? null,
             ]);
 
@@ -150,6 +168,18 @@ class TicketController extends Controller
             return $ticket;
         });
 
+        TicketActivity::create([
+            'ticket_id' => $ticket->id,
+            'actor_id' => auth()->id(),
+            'action' => 'created',
+            'changes' => $validated,
+        ]);
+
+        AuditEvent::log('ticket_created', [
+            'ticket_id' => $ticket->id,
+            'ticket_number' => $ticket->ticket_number,
+        ]);
+
         return redirect()->route('support.tickets.show', $ticket)
             ->with('success', "Ticket {$ticket->ticket_number} creado exitosamente.");
     }
@@ -162,6 +192,17 @@ class TicketController extends Controller
         // Verificar permisos
         if (!$ticket->canBeEditedBy(auth()->user())) {
             abort(403, 'No tienes permiso para ver este ticket.');
+        }
+
+        $includes = explode(',', $request->get('include', ''));
+
+        $relations = [];
+        if (in_array('requester', $includes)) $relations[] = 'user';
+        if (in_array('conversations', $includes)) $relations[] = 'conversations.user';
+        if (in_array('assets', $includes)) $relations[] = 'assets';
+        if (in_array('related_tickets', $includes)) {
+            $relations[] = 'parent';
+            $relations[] = 'children';
         }
 
         $ticket->load([
@@ -203,6 +244,44 @@ class TicketController extends Controller
         }
 
         $rules = [];
+
+        $validated = $request->validate([
+            'subject' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'priority' => 'sometimes|in:1,2,3,4',
+            'status' => 'sometimes|in:2,3,4,5',
+            'category' => 'nullable|string',
+            'urgency' => 'nullable|in:1,2,3',
+            'impact' => 'nullable|in:1,2,3',
+            'group_id' => 'nullable|exists:groups,id',
+            'agent_id' => 'nullable|exists:users,id',
+            'tags' => 'nullable|array',
+            'custom_fields' => 'nullable|array',
+        ]);
+
+        $oldValues = $ticket->toArray();
+        $ticket->update($validated);
+
+        // Registrar cambios
+        TicketActivity::create([
+            'ticket_id' => $ticket->id,
+            'actor_id' => auth()->id(),
+            'action' => 'updated',
+            'changes' => [
+                'old' => $oldValues,
+                'new' => $validated,
+            ],
+        ]);
+
+        // Actualizar timestamps especiales
+        if (isset($validated['status'])) {
+            if ($validated['status'] == 4 && !$ticket->resolved_at) {
+                $ticket->update(['resolved_at' => now()]);
+            }
+            if ($validated['status'] == 5 && !$ticket->closed_at) {
+                $ticket->update(['closed_at' => now()]);
+            }
+        }
 
         // Usuario puede actualizar subject si está abierto
         if ($ticket->status === TicketStatus::OPEN) {
@@ -383,4 +462,98 @@ class TicketController extends Controller
 
         return Storage::disk('s3')->download($attachment->path, $attachment->name);
     }
+
+    public function filter(string $view): JsonResponse
+    {
+        $query = SupportTicket::query()->notDeleted();
+        
+        $filters = [
+            'new_and_my_open' => fn($q) => $q->whereIn('status', ['open', 'new'])
+                ->where('agent', auth()->id()),
+            'watching' => fn($q) => $q->whereHas('watchers', fn($w) => 
+                $w->where('user_id', auth()->id())
+            ),
+            'spam' => fn($q) => $q->where('spam', true),
+            'deleted' => fn($q) => $q->where('deleted', true),
+            'overdue' => fn($q) => $q->where('due_by', '<', now())
+                ->whereNotIn('status', ['resolved', 'closed']),
+        ];
+        
+        if (isset($filters[$view])) {
+            $filters[$view]($query);
+        }
+        
+        $tickets = $query->with('user')->paginate(30);
+        return response()->json($tickets);
+    }
+
+    // Eliminar ticket (soft delete)
+    public function destroy(SupportTicket $ticket): JsonResponse
+    {
+        $ticket->update(['deleted' => true]);
+
+        AuditEvent::log('ticket_deleted', [
+            'ticket_id' => $ticket->id,
+        ]);
+
+        return response()->json(['message' => 'Ticket deleted']);
+    }
+
+    // Restaurar ticket
+    public function restore(SupportTicket $ticket): JsonResponse
+    {
+        $ticket->update(['deleted' => false]);
+
+        AuditEvent::log('ticket_restored', [
+            'ticket_id' => $ticket->id,
+        ]);
+
+        return response()->json([
+            'message' => 'Ticket restored',
+            'ticket' => $ticket
+        ]);
+    }
+
+    // Eliminar attachment
+    public function deleteAttachment(SupportTicket $ticket, $attachmentId): JsonResponse
+    {
+        $attachment = $ticket->attachments()->findOrFail($attachmentId);
+        Storage::disk('s3')->delete($attachment->path);
+        $attachment->delete();
+
+        AuditEvent::log('ticket_attachment_deleted', [
+            'ticket_id' => $ticket->id,
+            'attachment_id' => $attachmentId,
+        ]);
+
+        return response()->json(['message' => 'Attachment deleted']);
+    }
+
+    // Helpers privados
+    private function calculateDueDates(int $priority): array
+    {
+        // Lógica para calcular SLA basado en prioridad
+        $hours = match($priority) {
+            1 => 72,  // Low
+            2 => 48,  // Medium
+            3 => 24,  // High
+            4 => 8,   // Urgent
+        };
+
+        return [
+            'due_by' => now()->addHours($hours),
+            'fr_due_by' => now()->addHours($hours / 4), // 25% del tiempo para primera respuesta
+        ];
+    }
+
+    private function getOrCreateRequester(string $email): int
+    {
+        $user = User::firstOrCreate(
+            ['email' => $email],
+            ['name' => explode('@', $email)[0]]
+        );
+        
+        return $user->id;
+    }
+
 }
